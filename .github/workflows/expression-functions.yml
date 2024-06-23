@@ -25,6 +25,7 @@ jobs:
       - name: Parse JSON string
         run: "echo \"Parsed JSON: ${{ fromJSON('{\"hello\":\"world\"}').hello }}\""
       - name: Hash files
+        uses: actions/checkout@v1
         run: "echo \"Hash of files: ${{ hashFiles('**/package-lock.json') }}\""
       - name: The job has succeeded
         if: ${{ success() }}
