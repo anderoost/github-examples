@@ -1,20 +1,13 @@
-name: "Docker image scan"
+name: Container Image CI
 on: [push]
-
 jobs:
-    image-scan:
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Set up Docker Buildx"
-              uses: docker/setup-buildx-action@v2
-            - name: "Build local container"
-              uses: docker/build-push-action@v4
-              with:
-                tags: ghcr.io/berriai/litellm:main-latest
-                push: false
-                load: true
-
-            - name: Scan image
-              uses: anchore/scan-action@v3
-              with:
-                image: "ghcr.io/berriai/litellm:main-latest"
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Build the container image
+        run: docker build . --file Dockerfile --tag localbuild/testimage:latest
+      - uses: anchore/scan-action@v3
+        with:
+          image: "localbuild/testimage:latest"
+          fail-build: true
