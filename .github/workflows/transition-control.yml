@@ -1,21 +1,26 @@
-name: Project Card Moved Workflow
+name: Project Item Moved Tracking
 
 on:
-  project_card:
-    types: [moved]
-
-permissions:
-  projects: read
+  github-event-name: 'projects_v2_item_moved'
 
 jobs:
-  handle-project-card-move:
+  track-item-movement:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      projects: read
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log Project Card Move
+      - name: Log Project Item Movement
+        env:
+          EVENT_PAYLOAD: ${{ toJson(github.event) }}
         run: |
-          echo "Project card moved"
-          echo "Column: ${{ github.event.project_card.column_name }}"
-          echo "Project: ${{ github.event.project_card.project_url }}"
+          echo "Project item moved"
+          echo "Payload details: $EVENT_PAYLOAD"
+          
+      - name: Extract Movement Details
+        env:
+          EVENT_PAYLOAD: ${{ toJson(github.event) }}
+        run: |
+          echo "Project ID: $(echo '$EVENT_PAYLOAD' | jq '.project_id')"
+          echo "Previous Column: $(echo '$EVENT_PAYLOAD' | jq '.changes.column_id.from')"
+          echo "Current Column: $(echo '$EVENT_PAYLOAD' | jq '.project_id')"
