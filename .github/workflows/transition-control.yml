@@ -1,0 +1,21 @@
+name: Project Card Moved Workflow
+
+on:
+  project_card:
+    types: [moved]
+
+permissions:
+  projects: read
+
+jobs:
+  handle-project-card-move:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log Project Card Move
+        run: |
+          echo "Project card moved"
+          echo "Column: ${{ github.event.project_card.column_name }}"
+          echo "Project: ${{ github.event.project_card.project_url }}"
