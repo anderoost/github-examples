@@ -1,26 +1,26 @@
-name: Project Item Moved Tracking
+name: Extract Issue Form Values
 
 on:
-  github-event-name: 'projects_v2_item_moved'
+  issues:
+    types:
+      - opened
 
 jobs:
-  track-item-movement:
+  extract-values:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      projects: read
     steps:
-      - name: Log Project Item Movement
-        env:
-          EVENT_PAYLOAD: ${{ toJson(github.event) }}
+      - name: Extract Issue Form Data
         run: |
-          echo "Project item moved"
-          echo "Payload details: $EVENT_PAYLOAD"
+          ISSUE_BODY="${{ github.event.issue.body }}"
+          echo "Issue Body: $ISSUE_BODY"
           
-      - name: Extract Movement Details
-        env:
-          EVENT_PAYLOAD: ${{ toJson(github.event) }}
+          FIELD_1=$(echo "$ISSUE_BODY" | grep -A1 '### Field 1' | tail -n1 | xargs)
+          FIELD_2=$(echo "$ISSUE_BODY" | grep -A1 '### Field 2' | tail -n1 | xargs)
+          
+          echo "FIELD_1=$FIELD_1" >> $GITHUB_ENV
+          echo "FIELD_2=$FIELD_2" >> $GITHUB_ENV
+          
+      - name: Print Extracted Values
         run: |
-          echo "Project ID: $(echo '$EVENT_PAYLOAD' | jq '.project_id')"
-          echo "Previous Column: $(echo '$EVENT_PAYLOAD' | jq '.changes.column_id.from')"
-          echo "Current Column: $(echo '$EVENT_PAYLOAD' | jq '.project_id')"
+          echo "Extracted Field 1: $FIELD_1"
+          echo "Extracted Field 2: $FIELD_2"
