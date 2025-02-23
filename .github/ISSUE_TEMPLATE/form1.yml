@@ -1,0 +1,26 @@
+name: Formulario de aplicacion
+description: Formulario de registro de assessment
+title: Formulario de aplicacion
+labels: security
+projects: testing-proy
+
+body:
+  - type: input
+    id: app-name
+    attributes:
+      label: Aplicacion
+      description: Nombre de la aplicacion.
+      placeholder: "Ex. Aplicacion A" 
+
+  - type: dropdown
+    id: app-type
+    attributes:
+      label: Tipo de aplicacion
+      description: Tipo de aplicacion.
+      options:
+        - value: web
+          label: Web
+        - value: mobile
+          label: Mobile
+        - value: desktop
+          label: Desktop
