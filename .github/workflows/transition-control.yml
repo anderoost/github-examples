@@ -14,8 +14,8 @@ jobs:
           ISSUE_BODY="${{ github.event.issue.body }}"
           echo "Issue Body: $ISSUE_BODY"
           
-          FIELD_1=$(echo "$ISSUE_BODY" | grep -A1 '### Field 1' | tail -n1 | xargs)
-          FIELD_2=$(echo "$ISSUE_BODY" | grep -A1 '### Field 2' | tail -n1 | xargs)
+          FIELD_1=$(echo "$ISSUE_BODY" | grep -A1 '### Aplicacion' | tail -n1 | xargs)
+          FIELD_2=$(echo "$ISSUE_BODY" | grep -A1 '### Tipo de aplicacion' | tail -n1 | xargs)
           
           echo "FIELD_1=$FIELD_1" >> $GITHUB_ENV
           echo "FIELD_2=$FIELD_2" >> $GITHUB_ENV
