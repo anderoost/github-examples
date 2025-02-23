@@ -18,9 +18,6 @@ body:
       label: Tipo de aplicacion
       description: Tipo de aplicacion.
       options:
-        - value: web
-          label: Web
-        - value: mobile
-          label: Mobile
-        - value: desktop
-          label: Desktop
+        - web
+        - mobile
+        - desktop
