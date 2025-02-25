@@ -6,14 +6,14 @@ projects: testing-proy
 
 body:
   - type: input
-    id: app-name
+    id: f-app-name
     attributes:
       label: Aplicacion
       description: Nombre de la aplicacion.
       placeholder: "Ex. Aplicacion A" 
 
   - type: dropdown
-    id: app-type
+    id: f-app-type
     attributes:
       label: Tipo de aplicacion
       description: Tipo de aplicacion.

@@ -14,13 +14,45 @@ jobs:
           ISSUE_BODY="${{ github.event.issue.body }}"
           echo "Issue Body: $ISSUE_BODY"
           
-          FIELD_1=$(echo "$ISSUE_BODY" | grep -A2 '### Aplicacion' | tail -n1 | xargs)
-          FIELD_2=$(echo "$ISSUE_BODY" | grep -A2 '### Tipo de aplicacion' | tail -n1 | xargs)
+          APP_NAME=$(echo "$ISSUE_BODY" | grep -A2 '### Aplicacion' | tail -n1 | xargs)
+          APP_TYPE=$(echo "$ISSUE_BODY" | grep -A2 '### Tipo de aplicacion' | tail -n1 | xargs)
           
-          echo "FIELD_1=$FIELD_1" >> $GITHUB_ENV
-          echo "FIELD_2=$FIELD_2" >> $GITHUB_ENV
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          echo "APP_TYPE=$APP_TYPE" >> $GITHUB_ENV
           
       - name: Print Extracted Values
         run: |
-          echo "Extracted Field 1: $FIELD_1"
-          echo "Extracted Field 2: $FIELD_2"
+          echo "Nombre de la aplicacion: $APP_NAME"
+          echo "Tipo de aplicacion: $APP_TYPE"
+
+      - name: Set Issue Form Values in custom fields
+        uses: actions/github-script@v3
+        env: 
+          PROJ_APP_NAME_FIELD_ID: ${{ vars.PROJ_APP_NAME_FIELD_ID }}
+        with: 
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fieldId = process.env.PROJ_APP_NAME_FIELD_ID;
+            const itemId = context.payload.project_card.id;
+
+            const mutation = `
+              mutation {
+                updateProjectCardField(input: {
+                  projectCardId: "${itemId}",
+                  fieldId: "${fieldId}",
+                  value: "${process.env.APP_NAME}"
+                }) {
+                  projectCard {
+                    id
+                  }
+                }
+              }
+            `;
+
+            try {
+              await github.graphql(mutation);
+              console.log('APP_NAME actualizado correctamente');
+            } catch (error) {
+              console.error('Hubo un problema al intentar actualiza APP_NAME:', error);
+              core.setFailed('Failed to update custom field');
+            }
