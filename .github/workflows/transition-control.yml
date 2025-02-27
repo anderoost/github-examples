@@ -37,12 +37,14 @@ jobs:
 
             const mutation = `
               mutation {
-                updateProjectCardField(input: {
-                  projectCardId: "${issueId}",
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: "${issueId}",
                   fieldId: "${fieldId}",
-                  value: "${process.env.APP_NAME}"
+                  value: {
+                    text: "${process.env.APP_NAME}"
+                  }
                 }) {
-                  projectCard {
+                  projectV2Item {
                     id
                   }
                 }
