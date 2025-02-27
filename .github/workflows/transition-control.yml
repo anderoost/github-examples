@@ -33,12 +33,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fieldId = process.env.PROJ_APP_NAME_FIELD_ID;
-            const itemId = context.payload.project_card.id;
+            const issueId = context.payload.issue.id;
 
             const mutation = `
               mutation {
                 updateProjectCardField(input: {
-                  projectCardId: "${itemId}",
+                  projectCardId: "${issueId}",
                   fieldId: "${fieldId}",
                   value: "${process.env.APP_NAME}"
                 }) {
